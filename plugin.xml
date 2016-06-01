@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin 
+    id="cordova-plugin-pml-manager" 
+    version="0.0.1" 
+    xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <name>cordova-plugin-pml-manager</name>
+    <description>Polymorphic Labs Manager Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>bluetooth, BLE, bluetooth low energy, bluetooth smart, polymorphic, labs</keywords>
+
+    
+    <repo>https://github.com/PolymorphicLabs/cordova-plugin-pml-manager.git</repo>
+    <issue>https://github.com/PolymorphicLabs/cordova-plugin-pml-manager/issues</issue>
+
+    <dependency id="cordova-plugin-ble-central" version="1.1.0"/>
+
+
+    <js-module name="cordova-plugin-pml-manager" src="www/cordova-plugin-pml-manager.js">
+        <clobbers target="cordova.plugins.cordova-plugin-pml-manager" />
+    </js-module>
+
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="cordova-plugin-pml-manager">
+                <param name="android-package" value="cordova-plugin-pml-manager.cordova-plugin-pml-manager" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml" />
+        <source-file src="src/android/cordova-plugin-pml-manager.java" target-dir="src/cordova-plugin-pml-manager/cordova-plugin-pml-manager" />
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="cordova-plugin-pml-manager">
+                <param name="ios-package" value="cordova-plugin-pml-manager" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/cordova-plugin-pml-manager.m" />
+    </platform>
+</plugin>

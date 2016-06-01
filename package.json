@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-pml-manager",
+  "version": "0.0.1",
+  "description": "Polymorphic Labs Manager Plugin",
+  "cordova": {
+    "id": "cordova-plugin-pml-manager",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolymorphicLabs/cordova-plugin-pml-manager.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Polymorphic Labs LLC",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/PolymorphicLabs/cordova-plugin-pml-manager/issues"
+  },
+  "homepage": "https://github.com/PolymorphicLabs/cordova-plugin-pml-manager#readme"
+}
