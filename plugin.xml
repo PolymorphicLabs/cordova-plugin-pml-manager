@@ -32,7 +32,7 @@
             </feature>
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml" />
-        <source-file src="src/android/cordova-plugin-pml-manager.java" target-dir="src/cordova-plugin-pml-manager/cordova-plugin-pml-manager" />
+        <source-file src="src/android/manager.java" target-dir="src/cordova-plugin-pml-manager/cordova-plugin-pml-manager" />
     </platform>
 
     <platform name="ios">
