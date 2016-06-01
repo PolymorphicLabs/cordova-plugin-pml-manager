@@ -17,8 +17,12 @@
     <dependency id="cordova-plugin-ble-central" version="1.1.0"/>
 
 
-    <js-module name="cordova-plugin-pml-manager" src="www/cordova-plugin-pml-manager.js">
-        <clobbers target="cordova.plugins.cordova-plugin-pml-manager" />
+    <js-module name="pmlManager" src="www/pmlManager.js">
+        <clobbers target="pmlManager" />
+    </js-module>
+
+    <js-module name="pmlDotMove" src="www/pmlDotMove.js">
+        <clobbers target="pmlDotMove" />
     </js-module>
 
     <platform name="android">
