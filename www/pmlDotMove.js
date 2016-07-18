@@ -1,16 +1,9 @@
-"use strict";        
-
-var deviceId;
-var hwDefs;
-
-exports.setDeviceId = function(device){
-    deviceId = device;
-};
-
-exports.setHwDefs = function(defs){
-    hwDefs = defs;
-};
-
+var pmlDotMove = function(device, hwDefs){
+	 this.deviceId = device;
+//	 this.hwDefs = hwDefs;
+	 
+	 var deviceId = device;
+	 var hwDefs = hwDefs;
 	 
 	 //************************************************************************
 	 //Movement Service Functions
@@ -19,16 +12,16 @@ exports.setHwDefs = function(defs){
 	 var readMoveConfig = function(callback){
 		 ble.read(deviceId, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
 	 }
-	 exports.registerMoveCallback = function(callback){
+	 this.registerMoveCallback = function(callback){
 		 moveCallback = callback;
 	 };
-	 exports.enableMoveCallback = function(){
+	 this.enableMoveCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, moveCallback, function(error){console.log(error);});
 	 };
-	 exports.disableMoveCallback = function(){
+	 this.disableMoveCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, function(){console.log("Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 exports.setMovePeriod = function(period){
+	 this.setMovePeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -36,7 +29,7 @@ exports.setHwDefs = function(defs){
 		     function() { console.log("Configured movement period."); },function(error){console.log(error);});
 		 
 	 };
-	 exports.enableAccel = function(){
+	 this.enableAccel = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x38;	//Enable all accelerometers
@@ -45,7 +38,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.disableAccel = function(){
+	 this.disableAccel = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x38;	//Disable all accelerometers
@@ -59,7 +52,7 @@ exports.setHwDefs = function(defs){
 	 //1 = 4G
 	 //2 = 8G
 	 //3 = 16G
-	 exports.setAccelRange = function(range){
+	 this.setAccelRange = function(range){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x300;	//clear range config
@@ -69,7 +62,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.enableGyro = function(){
+	 this.enableGyro = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x07;	//Enable all gyroscopes
@@ -78,7 +71,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.disableGyro = function(){
+	 this.disableGyro = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x07;	//Disable all gyroscopes
@@ -94,7 +87,7 @@ exports.setHwDefs = function(defs){
 //         ble.write(this.deviceId, this.hwDefs.movement.service, this.hwDefs.movement.configuration, configData.buffer, 
 //             function() { console.log("Configured movement."); },function(error){console.log(error);});
 //	 };
-	 exports.enableMag = function(){
+	 this.enableMag = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x40;	//Enable all magnetometers
@@ -103,7 +96,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.disableMag = function(){
+	 this.disableMag = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x40;	//Disable all magnetometers
@@ -112,7 +105,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.enableAllMove = function(){
+	 this.enableAllMove = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x7F;	//Enable all movement sensors
@@ -121,7 +114,7 @@ exports.setHwDefs = function(defs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 exports.disableAllMove = function(){
+	 this.disableAllMove = function(){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x7F;	//Disabled all movement sensors
@@ -138,16 +131,16 @@ exports.setHwDefs = function(defs){
 	 var readAhrsConfig = function(callback){
 		 ble.read(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration,callback,function(error){console.log(error);});
 	 }
-	 exports.registerAhrsCallback = function(callback){
+	 this.registerAhrsCallback = function(callback){
 		 ahrsCallback = callback;
 	 };
-	 exports.enableAhrsCallback = function(){
+	 this.enableAhrsCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.data, ahrsCallback, function(error){console.log(error);});
 	 };
-	 exports.disableAhrsCallback = function(){
+	 this.disableAhrsCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.data, function(){console.log("AHRS Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 exports.setAhrsPeriod = function(period){
+	 this.setAhrsPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -155,14 +148,14 @@ exports.setHwDefs = function(defs){
 		     function() { console.log("Configured AHRS period."); },function(error){console.log(error);});
 		 
 	 };
-	 exports.enableAhrs = function(){
+	 this.enableAhrs = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;	//Enable AHRS
          ble.write(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration, configData.buffer, 
                  function() { console.log("Enabled AHRS."); },function(error){console.log(error);});
 
 	 };
-	 exports.disableAhrs = function(){
+	 this.disableAhrs = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;	//Disable AHRS
          ble.write(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration, configData.buffer, 
@@ -174,16 +167,16 @@ exports.setHwDefs = function(defs){
 	 //Barometer Service Functions
 	 //************************************************************************
 	 var baroCallback;
-	 exports.registerBaroCallback = function(callback){
+	 this.registerBaroCallback = function(callback){
 		 baroCallback = callback;
 	 };
-	 exports.enableBaroCallback = function(){
+	 this.enableBaroCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.barometer.service, hwDefs.barometer.data, baroCallback, function(error){console.log(error);});
 	 };
-	 exports.disableBaroCallback = function(){
+	 this.disableBaroCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.barometer.service, hwDefs.barometer.data, function(){console.log("Barometer Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 exports.setBaroPeriod = function(period){
+	 this.setBaroPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -191,13 +184,13 @@ exports.setHwDefs = function(defs){
 		     function() { console.log("Configured barometer period."); },function(error){console.log(error);});
 		 
 	 };
-	 exports.enableBaro = function(){
+	 this.enableBaro = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;
 		 ble.write(deviceId, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
 		     function() { console.log("Enabled barometer."); },function(error){console.log(error);});
 	 };
-	 exports.disableBaro = function(){
+	 this.disableBaro = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;
 		 ble.write(deviceId, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
@@ -208,29 +201,29 @@ exports.setHwDefs = function(defs){
 	 //IR Thermometer Service Functions
 	 //************************************************************************
 	 var irThermCallback;
-	 exports.registerThermCallback = function(callback){
+	 this.registerThermCallback = function(callback){
 		 irThermCallback = callback;
 	 };
-	 exports.enableThermCallback = function(){
+	 this.enableThermCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.data, irThermCallback, function(error){console.log(error);});
 	 };
-	 exports.disableThermCallback = function(){
+	 this.disableThermCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.data, function(){console.log("irThermometer Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 exports.setThermPeriod = function(period){
+	 this.setThermPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.period, periodData.buffer,
 		     function() { console.log("Configured irTherm period."); },function(error){console.log(error);});
 	 };
-	 exports.enableTherm = function(){
+	 this.enableTherm = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.configuration, configData.buffer,
 		     function() { console.log("Enabled irTherm."); },function(error){console.log(error);});
 	 };
-	 exports.disableTherm = function(){
+	 this.disableTherm = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.configuration, configData.buffer,
@@ -241,20 +234,20 @@ exports.setHwDefs = function(defs){
 	 //************************************************************************
 	 //IO Service Functions
 	 //************************************************************************
-	 exports.enableLEDControl = function(){
+	 this.enableLEDControl = function(){
 	     var ioConfig = new Uint8Array(1);
 	     ioConfig[0] = 1; //Enable LED Remote Control
 	     ble.write(deviceId, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer, 
 	     	function() { console.log("Enabled LED Control."); }, app.onError);
 	 };
-	 exports.diableLEDControl = function(){
+	 this.diableLEDControl = function(){
 		 setLEDColor(0,0,0);
 	     var ioConfig = new Uint8Array(1);
 	     ioConfig[0] = 0; //Disable LED Remote Control
 	     ble.write(deviceId, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer, 
 	     	function() { console.log("Disabled LED Control."); }, app.onError);
 	 };
-	 exports.setLEDColor = function(red, green, blue){
+	 this.setLEDColor = function(red, green, blue){
 	        var ioValue = new Uint8Array(3);
 	        ioValue[0] = red; //Set red value
 	        ioValue[1] = green; //Set red value
@@ -267,15 +260,15 @@ exports.setHwDefs = function(defs){
 	 //Button Service Functions
 	 //************************************************************************
 	 var buttonCallback;
-	 exports.registerButtonCallback = function(callback){
+	 this.registerButtonCallback = function(callback){
 		 buttonCallback = callback;
 	 };
-	 exports.enableButtonCallback = function(){
+	 this.enableButtonCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.button.service, hwDefs.button.data, buttonCallback, function(error){console.log(error);});
 	 };
-	 exports.disableButtonCallback = function(){
+	 this.disableButtonCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.button.service, hwDefs.button.data, function(){console.log("Button Notifications Stopped");}, function(error){console.log(error);});
 	 };
 
 	
-
+};

@@ -22,7 +22,7 @@
     </js-module>
 
     <js-module name="pmlDotMove" src="www/pmlDotMove.js">
-        <clobbers target="pmlDotMove" />
+        
     </js-module>
 
     <platform name="android">
