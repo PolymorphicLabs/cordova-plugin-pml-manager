@@ -1,27 +1,47 @@
-var pmlDotMove = function(device, hwDefs){
-	 this.deviceId = device;
-//	 this.hwDefs = hwDefs;
-	 
-	 var deviceId = device;
-	 var hwDefs = hwDefs;
+"use strict";        
+
+var deviceId;
+var hwDefs;
+
+exports.setDeviceId = function(device){
+    deviceId = device;
+};
+
+exports.setHwDefs = function(defs){
+    hwDefs = defs;
+};
+
+//Connection managment
+exports.connections = [];
+
+exports.newConnection = function(deviceMAC){
+    //Add device to connection list and return handle
+    exports.connections.push(deviceMAC);
+    return deviceMAC;
+};
+
+exports.termConnection = function(deviceMAC){
+    //Remove device from list and deregister any callbacks
+};
+
 	 
 	 //************************************************************************
 	 //Movement Service Functions
 	 //************************************************************************
-	 var moveCallback;
+	 var moveCallbacks = [];
 	 var readMoveConfig = function(callback){
 		 ble.read(deviceId, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
 	 }
-	 this.registerMoveCallback = function(callback){
-		 moveCallback = callback;
+	 exports.registerMoveCallback = function(handle, callback){
+		 moveCallbacks.push = {handle, callback};
 	 };
-	 this.enableMoveCallback = function(){
+	 exports.enableMoveCallback = function(handle){
 		 ble.startNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, moveCallback, function(error){console.log(error);});
 	 };
-	 this.disableMoveCallback = function(){
+	 exports.disableMoveCallback = function(handle){
 		 ble.stopNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, function(){console.log("Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 this.setMovePeriod = function(period){
+	 exports.setMovePeriod = function(handle, period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -29,7 +49,7 @@ var pmlDotMove = function(device, hwDefs){
 		     function() { console.log("Configured movement period."); },function(error){console.log(error);});
 		 
 	 };
-	 this.enableAccel = function(){
+	 exports.enableAccel = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x38;	//Enable all accelerometers
@@ -38,7 +58,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.disableAccel = function(){
+	 exports.disableAccel = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x38;	//Disable all accelerometers
@@ -52,7 +72,7 @@ var pmlDotMove = function(device, hwDefs){
 	 //1 = 4G
 	 //2 = 8G
 	 //3 = 16G
-	 this.setAccelRange = function(range){
+	 exports.setAccelRange = function(handle, range){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x300;	//clear range config
@@ -62,7 +82,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.enableGyro = function(){
+	 exports.enableGyro = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x07;	//Enable all gyroscopes
@@ -71,7 +91,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.disableGyro = function(){
+	 exports.disableGyro = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x07;	//Disable all gyroscopes
@@ -87,7 +107,7 @@ var pmlDotMove = function(device, hwDefs){
 //         ble.write(this.deviceId, this.hwDefs.movement.service, this.hwDefs.movement.configuration, configData.buffer, 
 //             function() { console.log("Configured movement."); },function(error){console.log(error);});
 //	 };
-	 this.enableMag = function(){
+	 exports.enableMag = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x40;	//Enable all magnetometers
@@ -96,7 +116,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.disableMag = function(){
+	 exports.disableMag = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x40;	//Disable all magnetometers
@@ -105,7 +125,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.enableAllMove = function(){
+	 exports.enableAllMove = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x7F;	//Enable all movement sensors
@@ -114,7 +134,7 @@ var pmlDotMove = function(device, hwDefs){
 		 };
 		 readMoveConfig(onRead);
 	 };
-	 this.disableAllMove = function(){
+	 exports.disableAllMove = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x7F;	//Disabled all movement sensors
@@ -131,16 +151,16 @@ var pmlDotMove = function(device, hwDefs){
 	 var readAhrsConfig = function(callback){
 		 ble.read(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration,callback,function(error){console.log(error);});
 	 }
-	 this.registerAhrsCallback = function(callback){
+	 exports.registerAhrsCallback = function(callback){
 		 ahrsCallback = callback;
 	 };
-	 this.enableAhrsCallback = function(){
+	 exports.enableAhrsCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.data, ahrsCallback, function(error){console.log(error);});
 	 };
-	 this.disableAhrsCallback = function(){
+	 exports.disableAhrsCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.data, function(){console.log("AHRS Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 this.setAhrsPeriod = function(period){
+	 exports.setAhrsPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -148,14 +168,14 @@ var pmlDotMove = function(device, hwDefs){
 		     function() { console.log("Configured AHRS period."); },function(error){console.log(error);});
 		 
 	 };
-	 this.enableAhrs = function(){
+	 exports.enableAhrs = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;	//Enable AHRS
          ble.write(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration, configData.buffer, 
                  function() { console.log("Enabled AHRS."); },function(error){console.log(error);});
 
 	 };
-	 this.disableAhrs = function(){
+	 exports.disableAhrs = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;	//Disable AHRS
          ble.write(deviceId, hwDefs.ahrs.service, hwDefs.ahrs.configuration, configData.buffer, 
@@ -167,16 +187,16 @@ var pmlDotMove = function(device, hwDefs){
 	 //Barometer Service Functions
 	 //************************************************************************
 	 var baroCallback;
-	 this.registerBaroCallback = function(callback){
+	 exports.registerBaroCallback = function(callback){
 		 baroCallback = callback;
 	 };
-	 this.enableBaroCallback = function(){
+	 exports.enableBaroCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.barometer.service, hwDefs.barometer.data, baroCallback, function(error){console.log(error);});
 	 };
-	 this.disableBaroCallback = function(){
+	 exports.disableBaroCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.barometer.service, hwDefs.barometer.data, function(){console.log("Barometer Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 this.setBaroPeriod = function(period){
+	 exports.setBaroPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
@@ -184,13 +204,13 @@ var pmlDotMove = function(device, hwDefs){
 		     function() { console.log("Configured barometer period."); },function(error){console.log(error);});
 		 
 	 };
-	 this.enableBaro = function(){
+	 exports.enableBaro = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;
 		 ble.write(deviceId, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
 		     function() { console.log("Enabled barometer."); },function(error){console.log(error);});
 	 };
-	 this.disableBaro = function(){
+	 exports.disableBaro = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;
 		 ble.write(deviceId, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
@@ -201,29 +221,29 @@ var pmlDotMove = function(device, hwDefs){
 	 //IR Thermometer Service Functions
 	 //************************************************************************
 	 var irThermCallback;
-	 this.registerThermCallback = function(callback){
+	 exports.registerThermCallback = function(callback){
 		 irThermCallback = callback;
 	 };
-	 this.enableThermCallback = function(){
+	 exports.enableThermCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.data, irThermCallback, function(error){console.log(error);});
 	 };
-	 this.disableThermCallback = function(){
+	 exports.disableThermCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.data, function(){console.log("irThermometer Notifications Stopped");}, function(error){console.log(error);});
 	 };
-	 this.setThermPeriod = function(period){
+	 exports.setThermPeriod = function(period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.period, periodData.buffer,
 		     function() { console.log("Configured irTherm period."); },function(error){console.log(error);});
 	 };
-	 this.enableTherm = function(){
+	 exports.enableTherm = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 1;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.configuration, configData.buffer,
 		     function() { console.log("Enabled irTherm."); },function(error){console.log(error);});
 	 };
-	 this.disableTherm = function(){
+	 exports.disableTherm = function(){
 		 var configData = new Uint8Array(1);
 		 configData[0] = 0;
 		 ble.write(deviceId, hwDefs.irTherm.service, hwDefs.irTherm.configuration, configData.buffer,
@@ -234,20 +254,20 @@ var pmlDotMove = function(device, hwDefs){
 	 //************************************************************************
 	 //IO Service Functions
 	 //************************************************************************
-	 this.enableLEDControl = function(){
+	 exports.enableLEDControl = function(){
 	     var ioConfig = new Uint8Array(1);
 	     ioConfig[0] = 1; //Enable LED Remote Control
 	     ble.write(deviceId, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer, 
 	     	function() { console.log("Enabled LED Control."); }, app.onError);
 	 };
-	 this.diableLEDControl = function(){
+	 exports.diableLEDControl = function(){
 		 setLEDColor(0,0,0);
 	     var ioConfig = new Uint8Array(1);
 	     ioConfig[0] = 0; //Disable LED Remote Control
 	     ble.write(deviceId, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer, 
 	     	function() { console.log("Disabled LED Control."); }, app.onError);
 	 };
-	 this.setLEDColor = function(red, green, blue){
+	 exports.setLEDColor = function(red, green, blue){
 	        var ioValue = new Uint8Array(3);
 	        ioValue[0] = red; //Set red value
 	        ioValue[1] = green; //Set red value
@@ -260,15 +280,16 @@ var pmlDotMove = function(device, hwDefs){
 	 //Button Service Functions
 	 //************************************************************************
 	 var buttonCallback;
-	 this.registerButtonCallback = function(callback){
+	 exports.registerButtonCallback = function(callback){
 		 buttonCallback = callback;
 	 };
-	 this.enableButtonCallback = function(){
+	 exports.enableButtonCallback = function(){
 		 ble.startNotification(deviceId, hwDefs.button.service, hwDefs.button.data, buttonCallback, function(error){console.log(error);});
 	 };
-	 this.disableButtonCallback = function(){
+	 exports.disableButtonCallback = function(){
 		 ble.stopNotification(deviceId, hwDefs.button.service, hwDefs.button.data, function(){console.log("Button Notifications Stopped");}, function(error){console.log(error);});
 	 };
 
 	
-};
+
+

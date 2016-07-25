@@ -103,9 +103,11 @@ exports.version = "0.0.1";
         };
         var onConnect = function(device){
         	connectedDevices.push(device);
-        	//Callback to application with user friendly object
-        	
-        	connectCallback(new pmlDotMove(device.id, hwDefs.pmDotMove[0]));
+
+            //Set HW Definitions
+        	pmlDotMove.setHwDefs(hwDefs.pmDotMove[0]);
+            //Add connection and callback with handle
+        	connectCallback(pmlDotMove.newConnection(device.id));
         	console.log(device);
         };
 
