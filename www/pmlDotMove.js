@@ -33,7 +33,7 @@ exports.termConnection = function(deviceMAC){
 		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
 	 }
 	 exports.registerMoveCallback = function(handle, callback){
-		 moveCallbacks.push = {handle, callback};
+		 moveCallbacks.push({handle, callback});
 	 };
 	 exports.enableMoveCallback = function(handle){
         function findHandle(callbacks) {
