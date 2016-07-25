@@ -29,23 +29,27 @@ exports.termConnection = function(deviceMAC){
 	 //Movement Service Functions
 	 //************************************************************************
 	 var moveCallbacks = [];
-	 var readMoveConfig = function(callback){
-		 ble.read(deviceId, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
+	 var readMoveConfig = function(handle, callback){
+		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
 	 }
 	 exports.registerMoveCallback = function(handle, callback){
 		 moveCallbacks.push = {handle, callback};
 	 };
 	 exports.enableMoveCallback = function(handle){
-		 ble.startNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, moveCallback, function(error){console.log(error);});
+        function findHandle(callbacks) {
+            return callbacks.handle === handle;
+        }
+         
+		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data, moveCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
 	 exports.disableMoveCallback = function(handle){
-		 ble.stopNotification(deviceId, hwDefs.movement.service, hwDefs.movement.data, function(){console.log("Movement Notifications Stopped");}, function(error){console.log(error);});
+		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data, function(){console.log("Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
 	 exports.setMovePeriod = function(handle, period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
-		 ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.period, periodData.buffer,
+		 ble.write(handle, hwDefs.movement.service, hwDefs.movement.period, periodData.buffer,
 		     function() { console.log("Configured movement period."); },function(error){console.log(error);});
 		 
 	 };
@@ -53,19 +57,19 @@ exports.termConnection = function(deviceMAC){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x38;	//Enable all accelerometers
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Enabled accelerometers."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.disableAccel = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x38;	//Disable all accelerometers
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Disabled accelerometers."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 //range
 	 //0 = 2G
@@ -77,28 +81,28 @@ exports.termConnection = function(deviceMAC){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x300;	//clear range config
 			 configData[0] |= (range << 8);
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Set accelerometer range."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.enableGyro = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x07;	//Enable all gyroscopes
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Enabled gyroscopes."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.disableGyro = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x07;	//Disable all gyroscopes
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Disabled gyroscopes."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 //	 var setGyroRange = function(range){
 //		 //TODO: Change config data
@@ -111,37 +115,37 @@ exports.termConnection = function(deviceMAC){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x40;	//Enable all magnetometers
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Enabled magnetometers."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.disableMag = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x40;	//Disable all magnetometers
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Disabled magnetometers."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.enableAllMove = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] |= 0x7F;	//Enable all movement sensors
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Enabled movement sensors."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 exports.disableAllMove = function(handle){
 		 onRead = function(data){
 			 var configData = new Uint16Array(data);
 			 configData[0] &= ~0x7F;	//Disabled all movement sensors
-	         ble.write(deviceId, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration, configData.buffer, 
 	                 function() { console.log("Disabled movement sensors."); },function(error){console.log(error);});
 		 };
-		 readMoveConfig(onRead);
+		 readMoveConfig(handle, onRead);
 	 };
 	 
 	//************************************************************************
