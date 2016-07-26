@@ -89,7 +89,7 @@ exports.termConnection = function(device){
 
 
     //Configuration 1
-    export.setOperatingMode = function(handle, mode){
+    exports.setOperatingMode = function(handle, mode){
         var operatingMode = new Uint8Array(1);
         operatingMode[0] = mode;
 		ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, operatingMode.buffer,
