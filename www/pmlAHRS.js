@@ -28,23 +28,78 @@ exports.termConnection = function(device){
 	 //************************************************************************
 	 //Movement Service Functions
 	 //************************************************************************
-	 var moveCallbacks = [];
-	 var readMoveConfig = function(handle, callback){
-		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.configuration,callback,function(error){console.log(error);});
+	 var rawMoveCallbacks = [];
+	 var orientationCallbacks = [];
+	 var vectorCallbacks = [];
+	 var readMoveConfig1 = function(handle, callback){
+		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.configuration1,callback,function(error){console.log(error);});
 	 }
-	 exports.registerMoveCallback = function(handle, callback){
-		 moveCallbacks.push({handle, callback});
+	 var readMoveConfig2 = function(handle, callback){
+		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.configuration2,callback,function(error){console.log(error);});
+	 }
+	 var readAxisMap = function(handle, callback){
+		 ble.read(handle, hwDefs.movement.service, hwDefs.movement.axismap,callback,function(error){console.log(error);});
+	 }
+
+     //raw movement data
+	 exports.registerRawMoveCallback = function(handle, callback){
+		 rawMoveCallbacks.push({handle, callback});
 	 };
-	 exports.enableMoveCallback = function(handle){
+	 exports.enableRawMoveCallback = function(handle){
         function findHandle(callbacks) {
             return callbacks.handle === handle;
         }
          
-		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data, moveCallbacks.find(findHandle).callback, function(error){console.log(error);});
+		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, rawMoveCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
-	 exports.disableMoveCallback = function(handle){
-		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data, function(){console.log("Movement Notifications Stopped");}, function(error){console.log(error);});
+	 exports.disableRawMoveCallback = function(handle){
+		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, function(){console.log("Raw Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
+
+     //orientation  data
+	 exports.registerOrientationCallback = function(handle, callback){
+		 orientationCallbacks.push({handle, callback});
+	 };
+	 exports.enableOrientationCallback = function(handle){
+        function findHandle(callbacks) {
+            return callbacks.handle === handle;
+        }
+         
+		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, orientationCallbacks.find(findHandle).callback, function(error){console.log(error);});
+	 };
+	 exports.disableOrientationCallback = function(handle){
+		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, function(){console.log("Orientation Notifications Stopped");}, function(error){console.log(error);});
+	 };
+
+     //linear acceleration and gravity vector data
+	 exports.registerVectorCallback = function(handle, callback){
+		 vectorCallbacks.push({handle, callback});
+	 };
+	 exports.enableVectorCallback = function(handle){
+        function findHandle(callbacks) {
+            return callbacks.handle === handle;
+        }
+         
+		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, vectorCallbacks.find(findHandle).callback, function(error){console.log(error);});
+	 };
+	 exports.disableVectorCallback = function(handle){
+		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, function(){console.log("Vector Notifications Stopped");}, function(error){console.log(error);});
+	 };
+
+
+
+    //Configuration 1
+    export.setOperatingMode = function(handle, mode){
+        var operatingMode = new Uint8Array(1);
+        operatingMode[0] = mode;
+		ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, operatingMode.buffer,
+		     function() { console.log("Configured operating mode."); },function(error){console.log(error);});
+    }
+
+    
+
+
+
 	 exports.setMovePeriod = function(handle, period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);

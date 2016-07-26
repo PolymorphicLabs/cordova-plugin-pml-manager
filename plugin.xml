@@ -25,6 +25,10 @@
        <clobbers target="pmlDotMove" /> 
     </js-module>
 
+    <js-module name="pmlAHRS" src="www/pmlAHRS.js">
+       <clobbers target="pmlAHRS" /> 
+    </js-module>
+
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="cordova-plugin-pml-manager">
