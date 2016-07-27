@@ -58,7 +58,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn on Data1
-         readMove1Config(handle, onRead);
+         readMoveConfig1(handle, onRead);
          //turn on Notifications for Data1
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, rawMoveCallbacks.find(findHandle).callback, function(error){console.log(error);});
 
@@ -73,7 +73,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn off Data1
-         readMove1Config(handle, onRead);
+         readMoveConfig1(handle, onRead);
          //Stop nofications on data1
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, function(){console.log("Raw Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
@@ -95,7 +95,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn on Data2
-         readMove1Config(handle, onRead); 
+         readMoveConfig1(handle, onRead); 
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, orientationCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
 	 exports.disableOrientationCallback = function(handle){
@@ -107,7 +107,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn off Data1
-         readMove1Config(handle, onRead);
+         readMoveConfig1(handle, onRead);
          //Stop nofications on data2         
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, function(){console.log("Orientation Notifications Stopped");}, function(error){console.log(error);});
 	 };
@@ -129,7 +129,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn on Data3
-         readMove1Config(handle, onRead);
+         readMoveConfig1(handle, onRead);
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, vectorCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
 	 exports.disableVectorCallback = function(handle){
@@ -141,7 +141,7 @@ exports.termConnection = function(device){
 		 };
 
          //turn off Data1
-         readMove1Config(handle, onRead);
+         readMoveConfig1(handle, onRead);
          //Stop nofications on data3
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, function(){console.log("Vector Notifications Stopped");}, function(error){console.log(error);});
 	 };
@@ -157,7 +157,7 @@ exports.termConnection = function(device){
 	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
 	                 function() { console.log("Configured operating mode."); },function(error){console.log(error);});
 		 };
-		 readMove1Config(handle, onRead);
+		 readMoveConfig1(handle, onRead);
     }
 
     
