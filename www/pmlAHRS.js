@@ -49,10 +49,32 @@ exports.termConnection = function(device){
         function findHandle(callbacks) {
             return callbacks.handle === handle;
         }
-         
+        
+        var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] |= 0x10;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Enabled Raw Movement Data."); },function(error){console.log(error);});
+		 };
+
+         //turn on Data1
+         readMove1Config(handle, onRead);
+         //turn on Notifications for Data1
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, rawMoveCallbacks.find(findHandle).callback, function(error){console.log(error);});
+
+         
 	 };
 	 exports.disableRawMoveCallback = function(handle){
+         var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] &= ~0x10;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Disabled Raw Movement Data."); },function(error){console.log(error);});
+		 };
+
+         //turn off Data1
+         readMove1Config(handle, onRead);
+         //Stop nofications on data1
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, function(){console.log("Raw Movement Notifications Stopped");}, function(error){console.log(error);});
 	 };
 
@@ -64,10 +86,29 @@ exports.termConnection = function(device){
         function findHandle(callbacks) {
             return callbacks.handle === handle;
         }
-         
+
+        var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] |= 0x20;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Enabled Orientation Data."); },function(error){console.log(error);});
+		 };
+
+         //turn on Data2
+         readMove1Config(handle, onRead); 
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, orientationCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
 	 exports.disableOrientationCallback = function(handle){
+         var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] &= ~0x20;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Disabled Orientation Data."); },function(error){console.log(error);});
+		 };
+
+         //turn off Data1
+         readMove1Config(handle, onRead);
+         //Stop nofications on data2         
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data2, function(){console.log("Orientation Notifications Stopped");}, function(error){console.log(error);});
 	 };
 
@@ -79,10 +120,29 @@ exports.termConnection = function(device){
         function findHandle(callbacks) {
             return callbacks.handle === handle;
         }
-         
+
+        var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] |= 0x40;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Enabled Vector Data."); },function(error){console.log(error);});
+		 };
+
+         //turn on Data3
+         readMove1Config(handle, onRead);
 		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, vectorCallbacks.find(findHandle).callback, function(error){console.log(error);});
 	 };
 	 exports.disableVectorCallback = function(handle){
+         var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+             config1Data[0] &= ~0x40;
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Disabled Vector Data."); },function(error){console.log(error);});
+		 };
+
+         //turn off Data1
+         readMove1Config(handle, onRead);
+         //Stop nofications on data3
 		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data3, function(){console.log("Vector Notifications Stopped");}, function(error){console.log(error);});
 	 };
 
@@ -90,10 +150,14 @@ exports.termConnection = function(device){
 
     //Configuration 1
     exports.setOperatingMode = function(handle, mode){
-        var operatingMode = new Uint8Array(1);
-        operatingMode[0] = mode;
-		ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, operatingMode.buffer,
-		     function() { console.log("Configured operating mode."); },function(error){console.log(error);});
+		 var onRead = function(data){
+			 var config1Data = new Uint8Array(data);
+			 config1Data[0] &= 0xF0;	//Clear previous mode
+             config1Data[0] |= (mode & 0x0F);
+	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
+	                 function() { console.log("Configured operating mode."); },function(error){console.log(error);});
+		 };
+		 readMove1Config(handle, onRead);
     }
 
     
