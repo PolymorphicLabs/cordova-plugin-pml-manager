@@ -176,78 +176,39 @@ exports.termConnection = function(device){
 	 
 	 
 	 //************************************************************************
-	 //Barometer Service Functions
+	 //Pressure Service Functions
 	 //************************************************************************
-	 var baroCallbacks = [];
+	 var pressureCallbacks = [];
 
-
-     //raw movement data
-	 exports.registerRawMoveCallback = function(handle, callback){
-		 rawMoveCallbacks.push({handle, callback});
+	 exports.registerPressureCallback = function(handle, callback){
+		 pressureCallbacks.push({handle, callback});
 	 };
-	 exports.enableRawMoveCallback = function(handle){
-        function findHandle(callbacks) {
-            return callbacks.handle === handle;
-        }
-        
-        var onRead = function(data){
-			 var config1Data = new Uint8Array(data);
-             config1Data[0] |= 0x10;
-	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
-	                 function() { console.log("Enabled Raw Movement Data."); },function(error){console.log(error);});
-		 };
-
-         //turn on Data1
-         readMoveConfig1(handle, onRead);
-         //turn on Notifications for Data1
-		 ble.startNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, rawMoveCallbacks.find(findHandle).callback, function(error){console.log(error);});
-
-         
-	 };
-	 exports.disableRawMoveCallback = function(handle){
-         var onRead = function(data){
-			 var config1Data = new Uint8Array(data);
-             config1Data[0] &= ~0x10;
-	         ble.write(handle, hwDefs.movement.service, hwDefs.movement.configuration1, config1Data.buffer, 
-	                 function() { console.log("Disabled Raw Movement Data."); },function(error){console.log(error);});
-		 };
-
-         //turn off Data1
-         readMoveConfig1(handle, onRead);
-         //Stop nofications on data1
-		 ble.stopNotification(handle, hwDefs.movement.service, hwDefs.movement.data1, function(){console.log("Raw Movement Notifications Stopped");}, function(error){console.log(error);});
-	 };
-
-
-	 exports.registerBaroCallback = function(handle, callback){
-		 baroCallbacks.push({handle, callback});
-	 };
-	 exports.enableBaroCallback = function(handle){
+	 exports.enablePressureCallback = function(handle){
         function findHandle(callbacks) {
             return callbacks.handle === handle;
         }
 
         //Start notifications
-		 ble.startNotification(handle, hwDefs.barometer.service, hwDefs.barometer.data, baroCallbacks.find(findHandle).callback, function(error){console.log(error);});
+		 ble.startNotification(handle, hwDefs.pressure.service, hwDefs.pressure.data, pressureCallbacks.find(findHandle).callback, function(error){console.log(error);});
          var configData = new Uint8Array(1);
          //Enable Data
 		 configData[0] = 1;
-		 ble.write(handle, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
-		     function() { console.log("Enabled barometer."); },function(error){console.log(error);});
+		 ble.write(handle, hwDefs.pressure.service, hwDefs.pressure.configuration, configData.buffer,
+		     function() { console.log("Enabled pressure Notifications."); },function(error){console.log(error);});
 	 };
-	 exports.disableBaroCallback = function(handle){
-		 ble.stopNotification(handle, hwDefs.barometer.service, hwDefs.barometer.data, function(){console.log("Barometer Notifications Stopped");}, function(error){console.log(error);});
+	 exports.disablePressureCallback = function(handle){
+		 ble.stopNotification(handle, hwDefs.pressure.service, hwDefs.pressure.data, function(){console.log("Pressure Notifications Stopped");}, function(error){console.log(error);});
 
          var configData = new Uint8Array(1);
 		 configData[0] = 0;
-		 ble.write(handle, hwDefs.barometer.service, hwDefs.barometer.configuration, configData.buffer,
+		 ble.write(handle, hwDefs.pressure.service, hwDefs.pressure.configuration, configData.buffer,
 		     function() { console.log("Disabled barometer."); },function(error){console.log(error);});
 	 };
-	 exports.setBaroPeriod = function(handle, period){
+	 exports.setPressurePeriod = function(handle, period){
 		 //TODO: Add math to calculate period value
 		 var periodData = new Uint8Array(1);
 		 periodData[0] = period;
-		 ble.write(handle, hwDefs.barometer.service, hwDefs.barometer.period, periodData.buffer,
+		 ble.write(handle, hwDefs.pressure.service, hwDefs.pressure.period, periodData.buffer,
 		     function() { console.log("Configured barometer period."); },function(error){console.log(error);});
 		 
 	 };
