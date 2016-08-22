@@ -1,5 +1,11 @@
+/**
+ * Polymorphic Labs Manager Module
+ * @module pmlManager
+ */
+
 "use strict";
 
+/** Polymorphic Labs Manager Module Version. */
 exports.version = "0.0.1";
 
 
@@ -95,15 +101,6 @@ exports.version = "0.0.1";
 		        		    period: "F000AA43-0451-4000-B000-000000000000" //Resolution 10 ms. Range 100 ms (0x0A) to 2.55 sec (0xFF). Default 1 second (0x64).
 		
 		        		},
-		
-		        		temperature : {
-	        			    service: "F000AA00-0451-4000-B000-000000000000", //
-	        			    data: "F000AA01-0451-4000-B000-000000000000", //Object[0:7], Object[8:15], Ambience[0:7], Ambience[8:15]
-	        			    notification: "F0002902-0451-4000-B000-000000000000", //Write 0x0001 to enable notifications, 0x0000 to disable.
-	        			    configuration: "F000AA02-0451-4000-B000-000000000000", //Write 0x01 to enable data collection, 0x00 to disable.
-	        			    period: "F000AA03-0451-4000-B000-000000000000" //Resolution 10 ms. Range 300 ms (0x1E) to 2.55 sec (0xFF). Default 1 second (0x64)
-		        				
-		        		},
 
                         humidity : {
 	        			    service: "F000AA20-0451-4000-B000-000000000000", //
@@ -192,28 +189,49 @@ exports.version = "0.0.1";
         //*********************************************************************
         //Public PML Manager functions go here
         //*********************************************************************
+
+        /** 
+         * Update hardware definitions. Currently not implemented. 
+         */
         exports.update = function(){
         	updateHwDefs();
         };
+
         /**
-         * Represents a book.
-         * @constructor
-         * @param {string} title - The title of the book.
-         * @param {string} author - The author of the book.
+         * Starts a bluetooth scan for Polymorphic Labs devices.
+         * @param {function} callback - function to be called when a device is found.
          */
         exports.startScan = function(callback){
         	scanCallback = callback;
         	ble.startScan([], onDiscoverDevice, onError);
         };
+
+        /**
+         * Stop a bluetooth scan.
+         */
         exports.stopScan = function(){
         	ble.stopScan(function(){console.log("Scan Complete");}, onError);
         };
+
+        /**
+         * Returns a list of Polymorphic Labs devices found by the bluetooth scan.
+         */
         exports.getFoundDevices = function(){
         	return foundDevices;
         };
+
+        /**
+         * Returns a list of Polymorphic Labs devices that are currently connected.
+         */
         exports.getConnectedDevices = function(){
         	return connectedDevices;
         };
+
+        /**
+         * Connects to bluetooth devices.
+         * @param {array} devices - Array of strings that contain the device MAC addresses to connect to.
+         * @param {function} callback - Function to call once a device has been connected.  The same function will be called for each connection.  A device object will be passed to the function so that the function knows which device it must configure.
+         */
         exports.connect = function(devices, callback){   
         	//Register callback
         	connectCallback = callback;
@@ -222,6 +240,11 @@ exports.version = "0.0.1";
         		ble.connect(devices[i], onConnect, onError);
         	}
         };
+
+        /**
+         * Disconnects from a bluetooth device.
+         * @param {array} devices - Array of strings that contain the device MAC addresses to disconnect from.
+         */
         exports.disconnect = function(devices){
         	//Scan through array and disconnect from devices
         	for(var i = 0; i < devices.length; i++){
@@ -229,7 +252,9 @@ exports.version = "0.0.1";
         	}
         };
         
-        
+        /**
+         * Returns the pmlManager version.
+         */
         exports.getVersion = function(){
             return exports.version;
         };
