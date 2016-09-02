@@ -281,13 +281,13 @@ exports.version = "0.0.1";
             //Register callback
         	connectCallback = callback;
 
-            //Search through the foundDevices array and disconnect from the devices we don't want
+            //Search through the connectedDevices array and disconnect from the devices we don't want
             for(var i = 0; i < connectedDevices.length; i++){
 
                 if(connectedDevices[i].name == "Polymorphic AHRS"){
 
                     //Put LED under local control
-                    pmlAHRS.disableLEDControl(foundDevices[i].id);
+                    pmlAHRS.disableLEDControl(connectedDevices[i].id);
 
                 }else if(connectedDevices[i].name == "Polymorphic Dot"){
 
