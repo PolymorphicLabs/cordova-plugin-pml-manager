@@ -493,7 +493,7 @@ exports.enableLEDControl = function(handle) {
  * Disables app control of the LED onboard the AHRS
  * @param {string} handle - MAC address string of the device you're changing the movement data period of.
  */
-exports.diableLEDControl = function(handle) {
+exports.disableLEDControl = function(handle) {
     setLEDColor(0, 0, 0);
     var ioConfig = new Uint8Array(1);
     ioConfig[0] = 0; //Disable LED Remote Control
