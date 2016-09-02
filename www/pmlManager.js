@@ -275,13 +275,60 @@ exports.version = "0.0.1";
          * @param {array} devices - Array of strings that contain the device MAC addresses to connect to.
          * @param {function} callback - Function to call once a device has been connected.  The same function will be called for each connection.  A device object will be passed to the function so that the function knows which device it must configure.
          */
-        exports.connect = function(devices, callback){   
-        	//Register callback
+        exports.connect = function(devices, callback){
+
+            //Register callback
         	connectCallback = callback;
-        	//Scan through array and connect to devices
-        	for(var i = 0; i < devices.length; i++){
-        		ble.connect(devices[i], onConnect, onError);
+
+            //Search through the foundDevices array and disconnect from the devices we don't want
+            for(var i = 0; i < foundDevices.length; i++){
+
+                if(foundDevices[i].name == "Polymorphic AHRS"){
+
+                    //Put LED under local control
+                    pmlAHRS.disableLEDControl(foundDevices[i].id);
+                    //Will we be connecting to this device we found?
+                    var index = devices.indexOf(foundDevices[i].id);
+                    if(index == -1){
+                        //Remove this connection from the lower layer
+    	                pmlAHRS.termConnection(foundDevices[i]);
+                        //Terminate BT Connection
+                        ble.disconnect(foundDevices[i].id, function(){console.log("Disconnected");}, onError);
+
+                    }
+
+                }else if(foundDevices[i].name == "Polymorphic Dot"){
+                    //Put LED under local control
+                    pmlDotMove.disableLEDControl(foundDevices[i].id);
+                    //Will we be connecting to this device we found?
+                    var index = devices.indexOf(foundDevices[i].id);
+                    if(index == -1){
+                        //Remove this connection from the lower layer
+    	                pmlDotMove.termConnection(foundDevices[i]);
+                        //Terminate BT Connection
+                        ble.disconnect(foundDevices[i].id, function(){console.log("Disconnected");}, onError);
+
+                    }
+                }
+
         	}
+
+            //Callback the application with the devices it wants
+            for(var i = 0; i < foundDevices.length; i++){
+
+                //Will we be connecting to this device we found?
+                var index = devices.indexOf(foundDevices[i].id);
+                if(index != -1){
+                    //If so add it to our array and call the application
+                    connectedDevices.push(foundDevices[i]);
+                    connectCallback(foundDevices[i];
+                }
+
+        	}
+
+            //Blank out found devices array
+            foundDevices = [];
+
         };
 
         /**

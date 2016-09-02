@@ -32,7 +32,12 @@ exports.newConnection = function(device) {
  * @param {object} device - Device object to remove from connection array.
  */
 exports.termConnection = function(device) {
-    //Remove device from list and deregister any callbacks
+    //Remove device from list 
+    var index = exports.connections.indexOf(device.id);
+    if(index != -1)
+    	exports.connections.splice(index, 1);
+
+    //TODO: Deregister any callbacks
 };
 
 //************************************************************************
