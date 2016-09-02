@@ -164,27 +164,49 @@ exports.version = "0.0.1";
         	console.log(reason);
         };
         var onDiscoverDevice = function(device){
-        	foundDevices.push(device);
-        	scanCallback(device);
-        };
-        var onConnect = function(device){
-        	connectedDevices.push(device);
-
             if(device.name === "Polymorphic AHRS"){
+
+                var onConnect = function(device){
+                                    //Turn on LED
+                                    pmlAHRS.enableLEDControl(device.id);
+                                    pmlAHRS.setLEDColor(device.id, 1, 0, 0);
+
+                                    //Add device to our list
+                                    foundDevices.push(device);
+
+                                    //Call back application
+                                    scanCallback(pmlAHRS.newConnection(device),"red");
+                }
+                
                 //Set HW Definitions
         	    pmlAHRS.setHwDefs(hwDefs.pmAHRS[0]);
-                //Add connection and callback with handle
-        	    connectCallback(pmlAHRS.newConnection(device));
+                //Connect
+                ble.connect(device.id, onConnect, onError);
+
             }else if(device.name === "Polymorphic Dot"){
+
+                var onConnect = function(device){
+                                    //Turn on LED
+                                    pmlDotMove.enableLEDControl(device.id);
+                                    pmlDotMove.setLEDColor(device.id, 1, 0, 0);
+
+                                    //Add device to our list
+                                    foundDevices.push(device);
+
+                                    //Call back application
+                                    scanCallback(pmlDotMove.newConnection(device),"red");
+                }
+
                 //Set HW Definitions
         	    pmlDotMove.setHwDefs(hwDefs.pmDotMove[0]);
-                //Add connection and callback with handle
-        	    connectCallback(pmlDotMove.newConnection(device));
+                //Connect
+                ble.connect(device.id, onConnect, onError);
+
             }
 
 
-        	console.log(device);
         };
+
 
         //*********************************************************************
         //Public PML Manager functions go here

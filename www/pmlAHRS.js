@@ -501,15 +501,13 @@ exports.diableLEDControl = function(handle) {
 /**
  * Sets the color of teh LED onboard the AHRS
  * @param {string} handle - MAC address string of the device you're changing the movement data period of.
- * @param {value} red - Intensity from 0 to 255;
- * @param {value} green - Intensity from 0 to 255;
- * @param {value} blue - Intensity from 0 to 255;
+ * @param {value} red - 1 or 0
+ * @param {value} green - 1 or 0;
+ * @param {value} blue - 1 or 0;
  */
 exports.setLEDColor = function(handle, red, green, blue) {
-    var ioValue = new Uint8Array(3);
-    ioValue[0] = red; //Set red value
-    ioValue[1] = green; //Set red value
-    ioValue[2] = blue; //Set red value
+    var ioValue = new Uint8Array(1);
+    ioValue[0] = red | (green << 1) | (blue << 2);
     ble.write(handle, hwDefs.io.service, hwDefs.io.data, ioValue.buffer,
         function() {
             console.log("Sent LED Color.");
