@@ -154,6 +154,7 @@ exports.version = "0.0.1";
         //*********************************************************************
         //Private PML Manager functions go here
         //*********************************************************************
+        var lastColor = "blue";
         var updateHwDefs = function(){
         	//Check for hwDefs in indexDB
         	//If found, grab version number and compare to latest on PML.com, download new copy as neccessary and store in indexDB
@@ -163,19 +164,39 @@ exports.version = "0.0.1";
         var onError = function(reason){
         	console.log(reason);
         };
+        var getNewColor = function(){
+            if(lastColor == "blue"){
+                lastColor = "red";
+                return "red";
+            }else if(lastColor == "red"){
+                lastColor = "green";
+                return "green";
+            }else{
+                lastColor = "blue";
+                return "blue";
+
+            }
+        };
         var onDiscoverDevice = function(device){
             if(device.name === "Polymorphic AHRS"){
 
                 var onConnect = function(device){
                                     //Turn on LED
                                     pmlAHRS.enableLEDControl(device.id);
-                                    pmlAHRS.setLEDColor(device.id, 1, 0, 0);
+                                    var color = getNewColor();
+                                    if(color == "red"){
+                                        pmlAHRS.setLEDColor(device.id, 1, 0, 0);
+                                    }else if(color == "green"){
+                                        pmlAHRS.setLEDColor(device.id, 0, 1, 0);
+                                    }else{
+                                        pmlAHRS.setLEDColor(device.id, 0, 0, 1);
+                                    }
 
                                     //Add device to our list
                                     foundDevices.push(device);
 
                                     //Call back application
-                                    scanCallback(pmlAHRS.newConnection(device),"red");
+                                    scanCallback(pmlAHRS.newConnection(device), color);
                 }
                 
                 //Set HW Definitions
