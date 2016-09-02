@@ -321,7 +321,7 @@ exports.version = "0.0.1";
                 if(index != -1){
                     //If so add it to our array and call the application
                     connectedDevices.push(foundDevices[i]);
-                    connectCallback(foundDevices[i];
+                    connectCallback(foundDevices[i]);
                 }
 
         	}
