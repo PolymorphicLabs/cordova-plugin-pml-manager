@@ -299,7 +299,7 @@ exports.version = "0.0.1";
                 var index = devices.indexOf(connectedDevices[i].id);
                 if(index == -1){
                     //If not, lets disconnect
-                    exports.disconnect(connectedDevices[i].id);
+                    exports.disconnect([connectedDevices[i].id]);
                 }
 
         	}
@@ -324,7 +324,7 @@ exports.version = "0.0.1";
 
             for(var i = 0; i < devices.length; i++){
                 for(var j = 0; j < connectedDevices.length; j++){
-                    if(device[i] == connectedDevices[j].id){
+                    if(devices[i] == connectedDevices[j].id){
                         //Found a device to remove
                         //Remove lower layer connection
                         if(connectedDevices[j].name == "Polymorphic AHRS"){
