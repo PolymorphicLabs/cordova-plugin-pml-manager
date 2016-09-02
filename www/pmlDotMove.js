@@ -268,7 +268,7 @@ exports.termConnection = function(device){
 	     	function() { console.log("Enabled LED Control."); }, app.onError);
 	 };
 	 exports.disableLEDControl = function(){
-		 setLEDColor(0,0,0);
+         exports.setLEDColor(handle, 0, 0, 0);
 	     var ioConfig = new Uint8Array(1);
 	     ioConfig[0] = 0; //Disable LED Remote Control
 	     ble.write(deviceId, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer, 

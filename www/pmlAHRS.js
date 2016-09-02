@@ -494,7 +494,7 @@ exports.enableLEDControl = function(handle) {
  * @param {string} handle - MAC address string of the device you're changing the movement data period of.
  */
 exports.disableLEDControl = function(handle) {
-    setLEDColor(0, 0, 0);
+    exports.setLEDColor(handle, 0, 0, 0);
     var ioConfig = new Uint8Array(1);
     ioConfig[0] = 0; //Disable LED Remote Control
     ble.write(handle, hwDefs.io.service, hwDefs.io.configuration, ioConfig.buffer,
