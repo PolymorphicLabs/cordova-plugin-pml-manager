@@ -139,7 +139,7 @@ exports.version = "0.0.1";
 	        ]                
         };
 
-        var foundDevices = [];
+        //var foundDevices = [];
         var connectedDevices = [];
         var scanCallback;
         var connectCallback;
@@ -193,7 +193,7 @@ exports.version = "0.0.1";
                                     }
 
                                     //Add device to our list
-                                    foundDevices.push(device);
+                                    connectedDevices.push(device);
 
                                     //Call back application
                                     scanCallback(pmlAHRS.newConnection(device), color);
@@ -212,7 +212,7 @@ exports.version = "0.0.1";
                                     pmlDotMove.setLEDColor(device.id, 1, 0, 0);
 
                                     //Add device to our list
-                                    foundDevices.push(device);
+                                    connectedDevices.push(device);
 
                                     //Call back application
                                     scanCallback(pmlDotMove.newConnection(device),"red");
@@ -259,6 +259,7 @@ exports.version = "0.0.1";
         /**
          * Returns a list of Polymorphic Labs devices found by the bluetooth scan.
          */
+        //TODO: remove?
         exports.getFoundDevices = function(){
         	return foundDevices;
         };
@@ -281,53 +282,35 @@ exports.version = "0.0.1";
         	connectCallback = callback;
 
             //Search through the foundDevices array and disconnect from the devices we don't want
-            for(var i = 0; i < foundDevices.length; i++){
+            for(var i = 0; i < connectedDevices.length; i++){
 
-                if(foundDevices[i].name == "Polymorphic AHRS"){
+                if(connectedDevices[i].name == "Polymorphic AHRS"){
 
                     //Put LED under local control
                     pmlAHRS.disableLEDControl(foundDevices[i].id);
-                    //Will we be connecting to this device we found?
-                    var index = devices.indexOf(foundDevices[i].id);
-                    if(index == -1){
-                        //Remove this connection from the lower layer
-    	                pmlAHRS.termConnection(foundDevices[i]);
-                        //Terminate BT Connection
-                        ble.disconnect(foundDevices[i].id, function(){console.log("Disconnected");}, onError);
 
-                    }
+                }else if(connectedDevices[i].name == "Polymorphic Dot"){
 
-                }else if(foundDevices[i].name == "Polymorphic Dot"){
                     //Put LED under local control
-                    pmlDotMove.disableLEDControl(foundDevices[i].id);
-                    //Will we be connecting to this device we found?
-                    var index = devices.indexOf(foundDevices[i].id);
-                    if(index == -1){
-                        //Remove this connection from the lower layer
-    	                pmlDotMove.termConnection(foundDevices[i]);
-                        //Terminate BT Connection
-                        ble.disconnect(foundDevices[i].id, function(){console.log("Disconnected");}, onError);
-
-                    }
+                    pmlDotMove.disableLEDControl(connectedDevices[i].id);
                 }
-
-        	}
-
-            //Callback the application with the devices it wants
-            for(var i = 0; i < foundDevices.length; i++){
 
                 //Will we be connecting to this device we found?
-                var index = devices.indexOf(foundDevices[i].id);
-                if(index != -1){
-                    //If so add it to our array and call the application
-                    connectedDevices.push(foundDevices[i]);
-                    connectCallback(foundDevices[i]);
+                var index = devices.indexOf(connectedDevices[i].id);
+                if(index == -1){
+                    //If not, lets disconnect
+                    exports.disconnect(connectedDevices[i].id);
                 }
 
         	}
 
-            //Blank out found devices array
-            foundDevices = [];
+
+            //Callback the application with the devices it wants
+            for(var i = 0; i < connectedDevices.length; i++){
+                    connectCallback(connectedDevices[i]);
+        	}
+
+            
 
         };
 
@@ -336,10 +319,32 @@ exports.version = "0.0.1";
          * @param {array} devices - Array of strings that contain the device MAC addresses to disconnect from.
          */
         exports.disconnect = function(devices){
-        	//Scan through array and disconnect from devices
-        	for(var i = 0; i < devices.length; i++){
-        		ble.disconnect(devices[i], function(){console.log("Disconnected");}, onError);
-        	}
+
+            var removalIndex = [];
+
+            for(var i = 0; i < devices.length; i++){
+                for(var j = 0; j < connectedDevices.length; j++){
+                    if(device[i] == connectedDevices[j].id){
+                        //Found a device to remove
+                        //Remove lower layer connection
+                        if(connectedDevices[j].name == "Polymorphic AHRS"){
+                            //Remove this connection from the lower layer
+    	                    pmlAHRS.termConnection(connectedDevices[j]);
+                        }else if(connectedDevices[j].name == "Polymorphic Dot"){
+                            //Remove this connection from the lower layer
+    	                    pmlDotMove.termConnection(connectedDevices[j]);
+                        }
+
+
+                        //Terminate BT Connection
+                        ble.disconnect(connectedDevices[j].id, function(){console.log("Disconnected");}, onError);
+                        //Remove from connectedDevices array
+                        connectedDevices.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+
         };
         
         /**
