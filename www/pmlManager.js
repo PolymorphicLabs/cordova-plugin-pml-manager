@@ -198,7 +198,7 @@ exports.version = "0.0.1";
                                     connectedDevices.push(device);
 
                                     //Call back application
-                                    scanCallback(pmlAHRS.newConnection(device);
+                                    scanCallback(pmlAHRS.newConnection(device));
                 }
                 
                 //Set HW Definitions
@@ -226,7 +226,7 @@ exports.version = "0.0.1";
                                     connectedDevices.push(device);
 
                                     //Call back application
-                                    scanCallback(pmlDotMove.newConnection(device);
+                                    scanCallback(pmlDotMove.newConnection(device));
                 }
 
                 //Set HW Definitions
