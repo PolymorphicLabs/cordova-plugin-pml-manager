@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-pml-manager",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Polymorphic Labs Manager Plugin",
   "cordova": {
     "id": "cordova-plugin-pml-manager",
