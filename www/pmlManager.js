@@ -198,7 +198,7 @@ exports.version = "0.0.1";
                                     connectedDevices.push(device);
 
                                     //Call back application
-                                    scanCallback(pmlAHRS.newConnection(device), color);
+                                    scanCallback(pmlAHRS.newConnection(device);
                 }
                 
                 //Set HW Definitions
@@ -211,13 +211,22 @@ exports.version = "0.0.1";
                 var onConnect = function(device){
                                     //Turn on LED
                                     pmlDotMove.enableLEDControl(device.id);
-                                    pmlDotMove.setLEDColor(device.id, 1, 0, 0);
+                                    var color = getNewColor();
+                                    if(color == "red"){
+                                        pmlDotMove.setLEDColor(device.id, 1, 0, 0);
+                                    }else if(color == "green"){
+                                        pmlDotMove.setLEDColor(device.id, 0, 1, 0);
+                                    }else{
+                                        pmlDotMove.setLEDColor(device.id, 0, 0, 1);
+                                    }
+
+                                    device.color = color;
 
                                     //Add device to our list
                                     connectedDevices.push(device);
 
                                     //Call back application
-                                    scanCallback(pmlDotMove.newConnection(device),"red");
+                                    scanCallback(pmlDotMove.newConnection(device);
                 }
 
                 //Set HW Definitions
