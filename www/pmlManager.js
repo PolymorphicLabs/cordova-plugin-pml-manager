@@ -192,7 +192,7 @@ exports.version = "0.0.1";
                                         pmlAHRS.setLEDColor(device.id, 0, 0, 1);
                                     }
 
-                                    device.push({color:color});
+                                    device.color = color;
 
                                     //Add device to our list
                                     connectedDevices.push(device);
