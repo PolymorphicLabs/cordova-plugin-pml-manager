@@ -206,7 +206,7 @@ exports.version = "0.0.1";
                 //Connect
                 ble.connect(device.id, onConnect, onError);
 
-            }else if(device.name === "Polymorphic Dot"){
+            }else if(device.name === "Polymorphic.Move"){
 
                 var onConnect = function(device){
                                     //Turn on LED
@@ -300,7 +300,7 @@ exports.version = "0.0.1";
                     //Put LED under local control
                     pmlAHRS.disableLEDControl(connectedDevices[i].id);
 
-                }else if(connectedDevices[i].name == "Polymorphic Dot"){
+                }else if(connectedDevices[i].name == "Polymorphic.Move"){
 
                     //Put LED under local control
                     pmlDotMove.disableLEDControl(connectedDevices[i].id);
@@ -341,7 +341,7 @@ exports.version = "0.0.1";
                         if(connectedDevices[j].name == "Polymorphic AHRS"){
                             //Remove this connection from the lower layer
     	                    pmlAHRS.termConnection(connectedDevices[j]);
-                        }else if(connectedDevices[j].name == "Polymorphic Dot"){
+                        }else if(connectedDevices[j].name == "Polymorphic.Move"){
                             //Remove this connection from the lower layer
     	                    pmlDotMove.termConnection(connectedDevices[j]);
                         }
