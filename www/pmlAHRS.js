@@ -6,6 +6,7 @@
 
 var deviceId;
 var hwDefs;
+var batteryLevel;
 
 /** Set the version of hwdefs used for this device. 
  * @param {object} defs - Specific hardware defs for the version of the device being interacted with.
@@ -536,6 +537,21 @@ exports.setLEDColor = function(handle, red, green, blue) {
             console.log("Sent LED Color.");
         }, app.onError);
 };
+
+//************************************************************************
+//Battery Service Functions
+//************************************************************************
+exports.getBatteryLevel = function(handle, callback) {
+
+    var onRead = function(data) {
+        var batteryData = new Uint8Array(data);
+        callback(batteryData);
+    };
+
+    ble.read(handle, hwDefs.battery.service, hwDefs.battery.data, onRead, function(error) {
+        console.log(error);
+        });
+}
 
 //************************************************************************
 //Button Service Functions

@@ -117,6 +117,12 @@ exports.version = "0.0.1";
 		        				configuration: "F000AA66-0451-4000-B000-000000000000"
 		        				
 		        		},
+
+                        battery : {
+		        				service: "180F",
+		        				data: "2A19"
+		        				
+		        		},  
 		
 		        		//http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Simple_Key_Service
 		        		button : {
