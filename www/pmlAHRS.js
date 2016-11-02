@@ -288,6 +288,24 @@ exports.setOperatingMode = function(handle, mode) {
     readMoveConfig1(handle, onRead);
 }
 
+
+/**
+ * Sets the axis mapping of the AHRS device.
+ * @param {string} handle - MAC address string of the device you're changing the operating mode of.
+ * @param {value} mapping 
+ */
+exports.setAxisMap = function(handle, mapping) {
+    var mapData = new Uint16Array(1);
+    mapData[0] = mapping;
+    ble.write(handle, hwDefs.movement.service, hwDefs.movement.axismap, mapData.buffer,
+        function() {
+            console.log("Configured axis mapping.");
+        },
+        function(error) {
+            console.log(error);
+        });
+}
+
 /**
  * Sets the movement data period of the AHRS device. 
  * @param {string} handle - MAC address string of the device you're changing the movement data period of.
