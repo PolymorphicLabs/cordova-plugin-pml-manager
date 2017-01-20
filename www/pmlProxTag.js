@@ -42,7 +42,7 @@ exports.termConnection = function(device) {
 
 //Tool Name Service
 var toolCallbacks = [];
-var readToolName = function(handle, callback){
+exports.readToolName = function(handle){
 
 
     var onRead = function(data){
@@ -53,7 +53,7 @@ var readToolName = function(handle, callback){
         toolCallbacks.find(findHandle).callback(data);
     };
 
-	 ble.read(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, onRead, function(error){console.log(error);});
+	ble.read(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, onRead, function(error){console.log(error);});
 }
 
 exports.registerToolCallback = function(handle, callback){
