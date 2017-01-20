@@ -148,10 +148,10 @@ exports.version = "0.0.1";
 	        			version: "1",
 		        		//Polymorphic Proximity Tag Service definitions
                         tool_name : {
-                                service: "C0E0",
-                                data: "C0E1",
-                                status: "C0E2",
-                                config: "C0E3"
+                                service: "F000C0E0-0451-4000-B000-000000000000",
+                                data: "F000C0E1-0451-4000-B000-000000000000",
+                                status: "F000C0E2-0451-4000-B000-000000000000",
+                                config: "F000C0E3-0451-4000-B000-000000000000"
                         },
 		        		
 
