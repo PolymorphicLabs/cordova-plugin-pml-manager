@@ -142,7 +142,33 @@ exports.version = "0.0.1";
 		        			reqDisconnect: "F000CCC3-0451-4000-B000-000000000000"
 		        		}
 	        	}
-	        ]                
+	        ],
+            pmProxTag : [
+	        	{
+	        			version: "1",
+		        		//Polymorphic Proximity Tag Service definitions
+                        tool_name : {
+                                service: "C0E0",
+                                data: "C0E1",
+                                status: "C0E2",
+                                config: "C0E3"
+                        },
+		        		
+
+                        battery : {
+		        				service: "180F",
+		        				data: "2A19"
+		        				
+		        		},  
+		
+		        		//http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Simple_Key_Service
+		        		button : {
+		        		    service: "FFE0",
+		        		    data: "FFE1", // Bit 2: side key, Bit 1- right key, Bit 0 –left key
+		        		}
+		        		
+	        	}
+	        ]                                
         };
 
         //var foundDevices = [];
@@ -237,6 +263,20 @@ exports.version = "0.0.1";
 
                 //Set HW Definitions
         	    pmlDotMove.setHwDefs(hwDefs.pmDotMove[0]);
+                //Connect
+                ble.connect(device.id, onConnect, onError);
+
+            }else if(device.name === "Polymorphic ProxTag"){
+
+                var onConnect = function(device){
+                    //Add device to our list
+                    connectedDevices.push(device);
+                    //Call back the application
+                    scanCallback(pmlProxTag.newConnection(device));
+                }
+
+                //Set hwdefs
+                pmlProxTag.setHwDefs(hwDefs.pmProxTag[0]);
                 //Connect
                 ble.connect(device.id, onConnect, onError);
 
@@ -350,6 +390,8 @@ exports.version = "0.0.1";
                         }else if(connectedDevices[j].name == "Polymorphic.Move"){
                             //Remove this connection from the lower layer
     	                    pmlDotMove.termConnection(connectedDevices[j]);
+                        }else if(connectedDevices[j].name == "Polymorphic ProxTag"){
+                            pmlProxTag.termConnection(connectedDevices[j]);
                         }
 
 
