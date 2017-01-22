@@ -61,10 +61,21 @@ exports.registerToolCallback = function(handle, callback){
 };
 
 exports.setToolName = function(handle, name){
+    function str2ab(str) {
+        var buf = new ArrayBuffer(str.length); // 1 bytes for each char
+        var bufView = new Uint8Array(buf);
+        for (var i=0, strLen=str.length; i<strLen; i++) {
+            bufView[i] = str.charCodeAt(i);
+        }
+        return bufView;
+    }
+
+
 		 //TODO: Add math to calculate period value
-		 var nameData = new Uint8Array(1);
-		 nameData[0] = name;
-		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, nameData.buffer,
+		 //var nameData = new Uint8Array(1);
+		 //nameData[0] = name;
+         var bufName = str2ab(name);
+		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, bufName.buffer,
 		     function() { console.log("Set tool name."); },function(error){console.log(error);});
 		 
 	 };
