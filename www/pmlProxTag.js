@@ -64,10 +64,14 @@ exports.setToolName = function(handle, name){
     function str2ab(str) {
         var buf = new ArrayBuffer(str.length); // 1 bytes for each char
         var bufView = new Uint8Array(buf);
+        var j = 0;
         for (var i=0, strLen=str.length; i<strLen; i++) {
-            bufView[i] = str.charCodeAt(i);
+            if(str.charCodeAt(i) != 0){
+                bufView[j] = str.charCodeAt(i);
+                j++;
+            }
         }
-        return bufView;
+        return bufView.buffer.slice(0, j);
     }
 
 
