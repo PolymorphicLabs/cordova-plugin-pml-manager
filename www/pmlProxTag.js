@@ -79,7 +79,7 @@ exports.setToolName = function(handle, name){
 		 //var nameData = new Uint8Array(1);
 		 //nameData[0] = name;
          var bufName = str2ab(name);
-		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, bufName.buffer,
+		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, bufName,
 		     function() { console.log("Set tool name."); },function(error){console.log(error);});
 		 
 	 };
