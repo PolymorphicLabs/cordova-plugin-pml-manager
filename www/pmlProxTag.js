@@ -72,7 +72,7 @@ exports.setToolName = function(handle, name){
             }
         }
         //cut off any extraneous data
-        buf = bufview.buffer.slice(0, j-1);
+        buf = bufView.buffer.slice(0, j-1);
         //Pad with spaces
         
         var finalBuf = new Uint8Array(20);
