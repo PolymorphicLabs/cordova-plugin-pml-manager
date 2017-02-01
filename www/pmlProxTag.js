@@ -71,7 +71,23 @@ exports.setToolName = function(handle, name){
                 j++;
             }
         }
-        return bufView.buffer.slice(0, j);
+        //cut off any extraneous data
+        buf = bufview.buffer.slice(0, j-1);
+        //Pad with spaces
+        
+        var finalBuf = new Uint8Array(20);
+        bufView = new Uint8Array(buf)
+
+        for(i = 0; i<20; i++){
+            if(i < j){
+                finalBuf[i] = bufView[i];
+            }else{
+                finalBuf[i] = ' ';
+            }
+        }
+
+
+        return finalBuf;
     }
 
 
@@ -79,7 +95,7 @@ exports.setToolName = function(handle, name){
 		 //var nameData = new Uint8Array(1);
 		 //nameData[0] = name;
          var bufName = str2ab(name);
-		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, bufName,
+		 ble.write(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, bufName.buffer,
 		     function() { console.log("Set tool name."); },function(error){console.log(error);});
 		 
 	 };
