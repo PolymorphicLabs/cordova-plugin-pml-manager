@@ -21,6 +21,11 @@
         <clobbers target="pmlManager" />
     </js-module>
 
+    
+    <js-module name="pmlOAD" src="www/pmlOAD.js">
+        <clobbers target="pmlOAD" />
+    </js-module>
+
     <js-module name="pmlProxTag" src="www/pmlProxTag.js">
         <clobbers target="pmlProxTag" />
     </js-module>

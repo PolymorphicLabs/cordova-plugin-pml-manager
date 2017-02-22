@@ -66,8 +66,9 @@ exports.version = "0.0.1";
 		        		
 		        		oad : {
 		        			service : "F000FFC0-0451-4000-B000-000000000000",
-		        			imageId: "F000FFC1-0451-4000-B000-000000000000",
-		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000"	
+		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
+		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
+		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
 		        		},
 		        		connection : {
 		        			service : "F000CCC0-0451-4000-B000-000000000000",
@@ -132,8 +133,9 @@ exports.version = "0.0.1";
 		        		
 		        		oad : {
 		        			service : "F000FFC0-0451-4000-B000-000000000000",
-		        			imageId: "F000FFC1-0451-4000-B000-000000000000",
-		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000"	
+		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
+		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
+		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
 		        		},
 		        		connection : {
 		        			service : "F000CCC0-0451-4000-B000-000000000000",
@@ -160,6 +162,12 @@ exports.version = "0.0.1";
 		        				data: "2A19"
 		        				
 		        		},  
+                        oad : {
+		        			service : "F000FFC0-0451-4000-B000-000000000000",
+		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
+		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
+		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
+		        		},
 		
 		        		//http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Simple_Key_Service
 		        		button : {
