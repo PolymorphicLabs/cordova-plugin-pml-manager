@@ -160,7 +160,7 @@ exports.startOAD = function(handle, fileEntry){
         console.log("File Loaded");
         
         //Split up the hex file into lines
-        var hexLines = fileData.split(/[\r\n]+/g); // tolerate both Windows and Unix linebreaks
+        hexLines = fileData.split(/[\r\n]+/g); // tolerate both Windows and Unix linebreaks
         hexLength = hexLines.length;
 
         //Config Image Identify Notifications
