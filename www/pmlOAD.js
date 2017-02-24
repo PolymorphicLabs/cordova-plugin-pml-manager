@@ -87,7 +87,7 @@ exports.startOAD = function(handle, fileEntry){
 		    var dataField = lines[i].substr(pos, dataLength * 2);
 			    //dataFieldBuf = new Buffer(dataField, "hex");
             //Data field buf (int array)
-            var dataFieldBuf[];
+            var dataFieldBuf;
             for(var j = 0; j < dataLength; j++){
                 dataFieldBuf[j] = parseInt(dataField.substr(j*2, 2), 16);
             }    
