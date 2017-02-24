@@ -89,7 +89,7 @@ exports.startOAD = function(handle, fileEntry){
             //Data field buf (int array)
             var dataFieldBuf;
             for(var j = 0; j < dataLength; j++){
-                dataFieldBuf[j] = parseInt(dataField.substr(j*2, 2), 16);
+                dataFieldBuf.push(parseInt(dataField.substr(j*2, 2), 16));
             }    
 
 		    pos += dataLength * 2;
