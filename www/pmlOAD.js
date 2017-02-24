@@ -134,7 +134,7 @@ exports.startOAD = function(handle, fileEntry){
     }
 
     var appendBuffer = function(buffer1, buffer2) {
-        var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+        var tmp = new Uint8Array(buffer1.byteLength + buffer2.length);
         tmp.set(new Uint8Array(buffer1), 0);
         tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
         return tmp;
