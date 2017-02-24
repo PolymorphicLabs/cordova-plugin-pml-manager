@@ -69,6 +69,7 @@ exports.version = "0.0.1";
 		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
 		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
 		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
+		        			imageStatus: "F000FFC4-0451-4000-B000-000000000000"
 		        		},
 		        		connection : {
 		        			service : "F000CCC0-0451-4000-B000-000000000000",
@@ -136,6 +137,7 @@ exports.version = "0.0.1";
 		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
 		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
 		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
+		        			imageStatus: "F000FFC4-0451-4000-B000-000000000000",
 		        		},
 		        		connection : {
 		        			service : "F000CCC0-0451-4000-B000-000000000000",
@@ -167,6 +169,7 @@ exports.version = "0.0.1";
 		        			imageIdentify: "F000FFC1-0451-4000-B000-000000000000",
 		        			imageBlock: "F000FFC2-0451-4000-B000-000000000000",	
 		        			imageCount: "F000FFC3-0451-4000-B000-000000000000",
+		        			imageStatus: "F000FFC4-0451-4000-B000-000000000000"
 		        		},
 		
 		        		//http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Simple_Key_Service
@@ -285,6 +288,7 @@ exports.version = "0.0.1";
 
                 //Set hwdefs
                 pmlProxTag.setHwDefs(hwDefs.pmProxTag[0]);
+                pmlOAD.setHwDefs(hwDefs.pmProxTag[0]);
                 //Connect
                 ble.connect(device.id, onConnect, onError);
 
