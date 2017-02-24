@@ -88,7 +88,7 @@ exports.startOAD = function(handle, fileEntry){
         if(hexLine.charAt(pos++) != ":"){
     	    console.log("Hex file invalid");
             return -1;
-            break;
+            
         }
 
 		//Number of bytes (hex digit pairs) in the data field
@@ -122,7 +122,7 @@ exports.startOAD = function(handle, fileEntry){
 		    console.log("Invalid checksum" +
 			    ": got " + checksum + ", but expected " + calcChecksum);
             return -1;
-            break;
+            
         }
         return 0;
 
