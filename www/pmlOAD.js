@@ -40,21 +40,9 @@ exports.termConnection = function(device) {
     //TODO: Deregister any callbacks
 };
 
-//Tool Name Service
+//OAD Service
 var oadCallbacks = [];
-exports.readToolName = function(handle){
 
-
-    var onRead = function(data){
-        function findHandle(callbacks) {
-            return callbacks.handle === handle;
-        }
-
-        oadCallbacks.find(findHandle).callback(data);
-    };
-
-	ble.read(handle, hwDefs.tool_name.service, hwDefs.tool_name.data, onRead, function(error){console.log(error);});
-}
 
 exports.registerOADCallback = function(handle, callback){
 	 oadCallbacks.push({handle, callback});
@@ -142,6 +130,8 @@ exports.startOAD = function(handle, fileEntry){
 
     var onBlockNotification = function(data){
         console.log("Block Notification:" + new Uint8Array(data));
+
+        var progress = (new Uint16Array(data))[0] / hexLength;
 
         parseHexLine(hexLines[currentLine++]);
 
