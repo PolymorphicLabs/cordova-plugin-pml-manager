@@ -48,7 +48,6 @@ exports.registerOADCallback = function(handle, callback){
 	 oadCallbacks.push({handle, callback});
 };
 
-
 exports.startOAD = function(handle, fileEntry){
 
 
@@ -127,11 +126,15 @@ exports.startOAD = function(handle, fileEntry){
         tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
         return tmp;
     };
+    
+    function findHandle(callbacks) {
+        return callbacks.handle === handle;
+    }
 
     var onBlockNotification = function(data){
         console.log("Block Notification:" + new Uint8Array(data));
 
-        var progress = (new Uint16Array(data))[0] / hexLength;
+        var progress = currentLine / hexLength;
 
         parseHexLine(hexLines[currentLine++]);
 
@@ -140,6 +143,10 @@ exports.startOAD = function(handle, fileEntry){
         ble.writeWithoutResponse(handle, hwDefs.oad.service, hwDefs.oad.imageBlock, imageBlock.buffer,
 		     function() { console.log("Sent Image block."); },function(error){console.log(error);});
 
+        //Update the application with our progress if one is registered
+        if(oadCallbacks.find(findHandle)){
+            oadCallbacks.find(findHandle).callback(progress);
+        }
 
     }
 
